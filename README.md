@@ -1,6 +1,6 @@
 ## Online Polls for Kasetsart University (ku-polls)
 
-This application is mainly used for online polls and surveys and using Django framework. It also having other features as well.
+This application is mainly used for online polls and surveys and using Django framework where you can see the tutorial on [Django Tutorial project][django-tutorial]. It also having other features as well.
 
 ## How to Install and Run
 
