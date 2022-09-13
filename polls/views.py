@@ -18,6 +18,7 @@ def get_queryset(self):
 
 
 class IndexView(generic.ListView):
+    """The view of index page which shows the list of all questions."""
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
 
@@ -27,10 +28,16 @@ class IndexView(generic.ListView):
 
 
 class DetailView(generic.DetailView):
+    """
+    The view of detail page which shows the detail of question
+    including the question and choices.
+    """
     model = Question
     template_name = 'polls/detail.html'
 
     def get(self, request, *args, **kwargs):
+        """Send the error message for poll that is not allow for voting,
+        but if the poll is allowed for voting, it will send to vote normally."""
         self.object = Question.objects.filter(pk=kwargs['pk'])[0]
         if not self.object.can_vote():
             messages.error(request, f'You are not allow to vote on question "{self.object.question_text}"')
@@ -41,11 +48,16 @@ class DetailView(generic.DetailView):
 
 
 class ResultsView(generic.DetailView):
+    """
+    The view of result page which shows the result that count
+    each vote for each choice.
+    """
     model = Question
     template_name = 'polls/results.html'
 
 
 def vote(request, question_id):
+    """A voting page that conducts private voting and returns to the results page if successful."""
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
