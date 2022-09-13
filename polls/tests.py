@@ -103,6 +103,61 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
 
+    def test_is_published_with_future_question(self):
+        """
+        is_published() returns False for questions whose pub_date
+        is in the future.
+        """
+        time = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertIs(future_question.is_published(), False)
+
+    def test_is_published_with_old_question(self):
+        """
+        is_published() returns True for questions whose pub_date
+        is older than 1 day.
+        """
+        time = timezone.now() - datetime.timedelta(days=30)
+        old_question = Question(pub_date=time)
+        self.assertIs(old_question.is_published(), True)
+
+    def test_is_published_with_recent_question(self):
+        """
+        is_published() returns True for questions whose pub_date
+        is  within the last day.
+        """
+        time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
+        recent_question = Question(pub_date=time)
+        self.assertIs(recent_question.is_published(), True)
+
+    def test_can_vote_with_future_question(self):
+        """
+        can_vote() returns False for questions whose pub_date
+        is in the future.
+        """
+        time = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertIs(future_question.can_vote(), False)
+
+    def test_can_vote_with_old_question(self):
+        """
+        can_vote() returns True for questions whose pub_date
+        is older than 1 day.
+        """
+        time = timezone.now() - datetime.timedelta(days=30)
+        old_question = Question(pub_date=time)
+        self.assertIs(old_question.can_vote(), True)
+
+    def test_can_vote_with_recent_question(self):
+        """
+        can_vote() returns True for questions whose pub_date
+        is  within the last day.
+        """
+        time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
+        end_time = time + datetime.timedelta(days=1)
+        recent_question = Question(pub_date=time, end_date=end_time)
+        self.assertIs(recent_question.can_vote(), True)
+
 
 class QuestionDetailViewTests(TestCase):
     def test_future_question(self):
@@ -113,7 +168,7 @@ class QuestionDetailViewTests(TestCase):
         future_question = create_question(question_text='Future question.', days=5)
         url = reverse('polls:detail', args=(future_question.id,))
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
     def test_past_question(self):
         """

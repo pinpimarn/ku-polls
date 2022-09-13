@@ -4,13 +4,35 @@ This application is mainly used for online polls and surveys and using Django fr
 
 ## How to Install and Run
 
-To be added.
+Clone this repository into your local working space.
+
+```
+git clone https://github.com/pinpimarn/ku-polls.git
+```
+
+Then, you have to build your server using `settings.env`.
+
+After that, you have to install the packages that are  required for this repository.
+
+```
+pip install -r requirements.txt
+```
+
+Lastly, you have to run the server by
+
+```
+python ./manage.py runserver
+```
+
+Now, you can visit the link`http://localhost:8000`.
+
 
 ## Project Documents
 
-All project documents are in the [Project Wiki](../../wiki/Home)
+All project documents are in the [Project Wiki](https://github.com/pinpimarn/ku-polls/wiki)
 
-- [Vision Statement](../../wiki/Vision%20Statement)
-- [Requirements](../../wiki/Requirements)
-- [Project Plan](../../wiki/Development%20Plan)
-- [Iteration 1 Plan](../../wiki/Iteration%201%20Plan) and [Task Board](https://github.com/users/pinpimarn/projects/1/views/2)
+- [Vision Statement](https://github.com/pinpimarn/ku-polls/wiki/Vision-Statement)
+- [Requirements](https://github.com/pinpimarn/ku-polls/wiki/Requirements)
+- [Project Plan](https://github.com/pinpimarn/ku-polls/wiki/Development-Plan)
+- [Iteration 1 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteration-1-Plan) and [Iteration1](https://github.com/users/pinpimarn/projects/1/views/2)
+- [Iteration 2 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteration-2-Plan) and [Task Board](https://github.com/users/pinpimarn/projects/1/views/3)
