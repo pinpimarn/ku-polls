@@ -35,4 +35,4 @@ All project documents are in the [Project Wiki](https://github.com/pinpimarn/ku-
 - [Requirements](https://github.com/pinpimarn/ku-polls/wiki/Requirements)
 - [Project Plan](https://github.com/pinpimarn/ku-polls/wiki/Development-Plan)
 - [Iteration 1 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteration-1-Plan) and [Iteration1](https://github.com/users/pinpimarn/projects/1/views/2)
-- [Iteration 2 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteration-2-Plan) and [Task Board](https://github.com/users/pinpimarn/projects/1/views/3)
+- [Iteration 2 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteration-2-Plan) and [Iteration2](https://github.com/users/pinpimarn/projects/1/views/3)
