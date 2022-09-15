@@ -1,11 +1,12 @@
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
 from .models import Choice, Question
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def get_queryset(self):
     """
@@ -27,7 +28,7 @@ class IndexView(generic.ListView):
         return Question.objects.filter(pub_date__lte = timezone.localtime()).order_by('-pub_date')[:5]
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
     """
     The view of detail page which shows the detail of question
     including the question and choices.
@@ -56,8 +57,16 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
+
+@login_required
+def vote(request, question_id):
+    """Vote for a choice on a question (poll)."""
+
 def vote(request, question_id):
     """A voting page that conducts private voting and returns to the results page if successful."""
+    user = request.user
+    if not user.is_authenticated:
+        return redirect('login')
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])

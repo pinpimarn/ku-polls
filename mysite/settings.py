@@ -28,6 +28,9 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = '/polls/'    # show list of polls
+LOGOUT_REDIRECT_URL = '/'         # after logout, go where?
+
 # Application definition
 
 INSTALLED_APPS = [
