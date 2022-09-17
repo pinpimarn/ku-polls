@@ -8,6 +8,7 @@ from .models import Choice, Question
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 def get_queryset(self):
     """
     Return the last five published questions (not including those set to be
@@ -57,14 +58,12 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
-
 @login_required
-def vote(request, question_id):
-    """Vote for a choice on a question (poll)."""
-
 def vote(request, question_id):
     """A voting page that conducts private voting and returns to the results page if successful."""
     user = request.user
+    print("current user is", user.id, "login", user.username)
+    print("Real name:", user.first_name, user.last_name)
     if not user.is_authenticated:
         return redirect('login')
     question = get_object_or_404(Question, pk=question_id)
