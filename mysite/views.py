@@ -16,14 +16,17 @@ def signup(request):
             form.save()
             username = form.cleaned_data.get('username')
             raw_passwd = form.cleaned_data.get('password')
-            user = authenticate(username=username,password=raw_passwd)
-            login(request, user)
-            return redirect('polls')
+            user = authenticate(username=username, password=raw_passwd)
+            if user:
+                login(request, user)
+                return redirect('login')
+            return redirect('home')
         # what if form is not valid?
         # we should display a message in signup.html
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form':form})
+
 
 def home(request):
     """Redirect url of 'polls:index'."""

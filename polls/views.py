@@ -8,8 +8,6 @@ from .models import Choice, Question
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Choice, Question, Vote
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import UserCreationForm
 
 
 def get_queryset(self):
@@ -61,31 +59,30 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
-@login_required(login_url='/accounts/login/')
+@login_required
 def vote(request, question_id):
     """A voting page that conducts private voting and returns to the results page if successful."""
-    user = request.user
-    print("current user is", user.id, "login", user.username)
-    print("Real name:", user.first_name, user.last_name)
-    if not user.is_authenticated:
-        return redirect('login')
-    question = get_object_or_404(Question, pk=question_id)
     try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form.
         return render(request, 'polls/detail.html', {
-            'question': question,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        try:
-            vote_object = Vote.objects.get(user=user)
-            vote_object.choice = selected_choice
-            vote_object.save()
-        except Vote.DoesNotExist:
-            Vote.objects.create(user=user, choice=selected_choice).save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+                'question': question,
+                'error_message': "You didn't select a choice.",
+            })
+    user = request.user
+    try:
+        vote_object = Vote.objects.get(user=user, choice__in=question.choice_set.all())
+    except Vote.DoesNotExist:
+        vote_object = Vote.objects.create(choice=selected_choice, user=user)
+        vote_object.save()
+    vote_object.choice = selected_choice
+    vote_object.save()
+    # Always return an HttpResponseRedirect after successfully dealing
+    # with POST data. This prevents data from being posted twice if a
+    # user hits the Back button.
+    return redirect("polls:results", pk=question_id)

@@ -26,6 +26,17 @@ python ./manage.py runserver
 
 Now, you can visit the link`http://localhost:8000`.
 
+## Demo users
+
+Users provided by the initial data (users.json):
+
+| Username  | Password    |
+|-----------|-------------|
+| mymelody     | hackme22    |
+| test     | iamabot555    |
+| iamnewuser     | whatisthis000    |
+| lestmetest    | helloworld222    |
+
 
 ## Project Documents
 
