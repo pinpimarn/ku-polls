@@ -7,6 +7,9 @@ from django.contrib import messages
 from .models import Choice, Question
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Choice, Question, Vote
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
 
 
 def get_queryset(self):
@@ -58,7 +61,7 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def vote(request, question_id):
     """A voting page that conducts private voting and returns to the results page if successful."""
     user = request.user
@@ -76,8 +79,12 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
+        try:
+            vote_object = Vote.objects.get(user=user)
+            vote_object.choice = selected_choice
+            vote_object.save()
+        except Vote.DoesNotExist:
+            Vote.objects.create(user=user, choice=selected_choice).save()
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
