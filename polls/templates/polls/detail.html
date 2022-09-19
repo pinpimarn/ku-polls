@@ -1,19 +1,24 @@
 {% if user.is_authenticated %}
     Welcome back, {{ user.username }}
-    <form action="{% url 'polls:vote' question.id %}" method="post">
-    {% csrf_token %}
-    <fieldset>
-        <legend><h1>{{ question.question_text }}</h1></legend>
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        {% for choice in question.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-        {% endfor %}
-    </fieldset>
-    <input type="submit" value="Vote">
-
-        <a href="/polls">Back to List of Polls</a>
-    </form>
 {% else %}
     Please <a href="{% url 'login'%}?next={{request.path}}">Login</a>
 {% endif %}
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h1>{{ question.question_text }}</h1></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% for choice in question.choice_set.all %}
+        {% if choice.choice_text == selected_choice %}
+                <input type="radio" checked="true" name="choice" id="choice{{ forloop.counter }}"
+                    value="{{ choice.id }}">
+                {% else %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                {% endif %}
+        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+    {% endfor %}
+</fieldset>
+<input type="submit" value="Vote">
+
+    <a href="/polls">Back to List of Polls</a>
+</form>
