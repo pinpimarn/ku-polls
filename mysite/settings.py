@@ -31,6 +31,33 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = '/polls/'    # show list of polls
 LOGOUT_REDIRECT_URL = 'home'         # after logout, go where?
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '{asctime}:{name}:{levelname}:{message}'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'polls': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'formatter': 'verbose',
+            'propagate': False,
+        },
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [
