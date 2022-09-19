@@ -2,7 +2,6 @@
 {% extends 'base.html' %}
 
 {% block title %}Home{% endblock %}
-
 {% block content %}
 {% if user.is_authenticated %}
 <h2 style="background-color:MediumSeaGreen;">Hi <i>{{ user.username }}</i>! </h2>
