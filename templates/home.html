@@ -1,0 +1,19 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<h2 style="background-color:MediumSeaGreen;">Hi <i>{{ user.username }}</i>! </h2>
+  <br>
+  <a href="http://127.0.0.1:8000/polls/">Back To Polls</a>
+  <br>
+  <a href="http://127.0.0.1:8000/accounts/logout">Log Out</a>
+{% else %}
+  <h2 style="background-color:MediumSeaGreen;">Welcome to KU Polls!</h2>
+  <h3>You are not logged in</h3>
+  <a href="{% url 'login' %}">Log In</a>
+  <p>If you do not have account yet...</p>
+  <a href="{% url 'signup' %}">Sign Up</a>
+{% endif %}
+{% endblock %}

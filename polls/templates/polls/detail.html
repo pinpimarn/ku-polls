@@ -1,10 +1,21 @@
+<body style="background-color:beige;">
+{% if user.is_authenticated %}
+<p style="background-color:lightgreen;">Welcome back, {{ user.username }}</p>
+{% else %}
+    Please <a href="{% url 'login'%}?next={{request.path}}">Login</a>
+{% endif %}
 <form action="{% url 'polls:vote' question.id %}" method="post">
 {% csrf_token %}
 <fieldset>
-    <legend><h1>{{ question.question_text }}</h1></legend>
+    <legend><h1 style="background-color:MediumSeaGreen;">{{ question.question_text }}</h1></legend>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
     {% for choice in question.choice_set.all %}
-        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+        {% if choice.choice_text == selected_choice %}
+                <input type="radio" checked="true" name="choice" id="choice{{ forloop.counter }}"
+                    value="{{ choice.id }}">
+                {% else %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                {% endif %}
         <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
     {% endfor %}
 </fieldset>
@@ -12,3 +23,4 @@
 
     <a href="/polls">Back to List of Polls</a>
 </form>
+</body>

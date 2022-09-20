@@ -1,0 +1,13 @@
+<h2>Register</h2>
+<form method="POST">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    <tr>
+    <td colspan="2">
+    <button type="submit">Register</button>
+        <p style="background-color:yellow;">Note: Once you register, we will take you to homepage immediately </p>
+    </td>
+    </tr>
+    </table>
+</form>

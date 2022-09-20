@@ -1,12 +1,13 @@
-<h1>{{ question.question_text }}</h1>
+<body style="background-color:beige;">
+<h1 style="background-color:MediumSeaGreen;">{{ question.question_text }}</h1>
 
 
 <table width="500" border="1">
     <col align="center">
 
     <tr>
-        <th>Choices</th>
-        <th>Vote(s)</th>
+        <th style="background-color:LightGreen;">Choices</th>
+        <th style="background-color:LightGreen;">Vote(s)</th>
     </tr>
 {% for choice in question.choice_set.all %}
     <tr><td>{{ choice.choice_text }}</td> <td>{{ choice.votes }}</td></tr>
@@ -17,3 +18,4 @@
 <br>
 <!--<a href="{% url 'polls:detail' question.id %}">Vote again?</a>-->
 <a href="/polls">Back to List of Polls</a>
+</body>

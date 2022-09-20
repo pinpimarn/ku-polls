@@ -1,10 +1,24 @@
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
-from .models import Choice, Question
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Choice, Question, Vote
+import logging
+logger = logging.getLogger("polls")
+
+
+def get_client_ip(request):
+    """Get the visitor’s IP address using request headers."""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 def get_queryset(self):
@@ -27,7 +41,7 @@ class IndexView(generic.ListView):
         return Question.objects.filter(pub_date__lte = timezone.localtime()).order_by('-pub_date')[:5]
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
     """
     The view of detail page which shows the detail of question
     including the question and choices.
@@ -35,14 +49,29 @@ class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
 
+    def get_context_data(self, **kwargs):
+        question = Question.objects.get(pk=self.question_id)
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_authenticated:
+            try:
+                selected_choice = Vote.objects.get(
+                    user=user, choice__in=question.choice_set.all()).choice.choice_text
+                context["selected_choice"] = selected_choice
+            except Vote.DoesNotExist:
+                pass
+        return context
+
     def get(self, request, *args, **kwargs):
         """Send the error message for poll that is not allow for voting,
         but if the poll is allowed for voting, it will send to vote normally."""
-        self.object = Question.objects.filter(pk=kwargs['pk'])[0]
+        self.question_id = kwargs["pk"]
+        self.object = Question.objects.get(pk=self.question_id)
+        if not self.object.is_published():
+            raise Http404("You are not allow to vote on this question")
         if not self.object.can_vote():
             messages.error(request, f'You are not allow to vote on question "{self.object.question_text}"')
-            return HttpResponseRedirect(reverse('polls:index'))
-
+            return redirect("polls:results", pk=self.question_id)
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
@@ -56,21 +85,30 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
+@login_required
 def vote(request, question_id):
     """A voting page that conducts private voting and returns to the results page if successful."""
-    question = get_object_or_404(Question, pk=question_id)
     try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form.
         return render(request, 'polls/detail.html', {
-            'question': question,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+                'question': question,
+                'error_message': "You didn't select a choice.",
+            })
+    user = request.user
+    try:
+        vote_object = Vote.objects.get(user=user, choice__in=question.choice_set.all())
+    except Vote.DoesNotExist:
+        vote_object = Vote.objects.create(choice=selected_choice, user=user)
+        vote_object.save()
+    vote_object.choice = selected_choice
+    vote_object.save()
+    # Always return an HttpResponseRedirect after successfully dealing
+    # with POST data. This prevents data from being posted twice if a
+    # user hits the Back button.
+    return redirect("polls:results", pk=question_id)
