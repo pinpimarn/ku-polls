@@ -2,23 +2,46 @@
 
 This application is mainly used for online polls and surveys and using Django framework where you can see the tutorial on [Django Tutorial project](https://docs.djangoproject.com/en/4.1/intro/tutorial01/). It also having other features as well.
 
-## How to Install and Run
+## How to Install
 
 Clone this repository into your local working space.
 
 ```
-git clone https://github.com/pinpimarn/ku-polls.git
+    git clone https://github.com/pinpimarn/ku-polls.git
+```
+
+Next, run
+```
+    python -m venv env
+```
+and
+```
+    . env/Scripts/activate
+```
+
+After that, you have to install the packages that are required for this repository.
+
+```
+    pip install -r requirements.txt
+```
+
+Next, deactivate the environment by
+
+```
+    deactivate
 ```
 
 Then, you have to build your server using `settings.env`.
 
-After that, you have to install the packages that are  required for this repository.
+Lastly, you have to create the database run and load data by
 
 ```
-pip install -r requirements.txt
+    python manage.py loaddata data/polls.json data/users.json
 ```
 
-Lastly, you have to run the server by
+## How to Run
+
+You can run the server by
 
 ```
 python ./manage.py runserver
@@ -48,3 +71,4 @@ All project documents are in the [Project Wiki](https://github.com/pinpimarn/ku-
 - [Iteration 1 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteration-1-Plan) and [Iteration1](https://github.com/users/pinpimarn/projects/1/views/2)
 - [Iteration 2 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteration-2-Plan) and [Task Board](https://github.com/users/pinpimarn/projects/1/views/3)
 - [Iteration 3 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteraton-3-Plan) and [Task Board](https://github.com/users/pinpimarn/projects/1/views/4)
+- [Iteration 4 Plan](https://github.com/pinpimarn/ku-polls/wiki/Iteraton-4-Plan) and [Task Board](https://github.com/users/pinpimarn/projects/1/views/5)

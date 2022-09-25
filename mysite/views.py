@@ -1,3 +1,4 @@
+"""Create views for webpage mainly in login page."""
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -25,7 +26,7 @@ def signup(request):
         # we should display a message in signup.html
     else:
         form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form':form})
+    return render(request, 'registration/signup.html', {'form': form})
 
 
 def home(request):
