@@ -1,3 +1,4 @@
+"""All model needed in the polls app."""
 import datetime
 from django.contrib import admin
 from django.db import models
@@ -7,6 +8,7 @@ from django.contrib.auth.models import User
 
 class Question(models.Model):
     """Model for Question, including question text, publish date, and end date."""
+
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     end_date = models.DateTimeField('End date', default=None, blank=True, null=True)
@@ -40,6 +42,7 @@ class Question(models.Model):
 
 class Choice(models.Model):
     """Model for Choice, including question, choice_text, and votes."""
+
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     # votes = models.IntegerField(default=0)
@@ -47,6 +50,7 @@ class Choice(models.Model):
     @property
     def votes(self) -> int:
         """Return votes amount of that choice.
+
         Returns:
             int: votes amount
         """
@@ -58,7 +62,7 @@ class Choice(models.Model):
 
 
 class Vote(models.Model):
-    """Model for votes of question"""
+    """Model for votes of question."""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
@@ -66,6 +70,7 @@ class Vote(models.Model):
     @property
     def question(self) -> Question:
         """Return the question holding this vote.
+
         Returns:
             Question: question of this vote.
         """
