@@ -1,5 +1,5 @@
 ## Online Polls for Kasetsart University (ku-polls)
-[![Django Cl](https://github.com/pinpimarn/ku-polls/actions/workflows/django.yml/badge.svg)](https://github.com/pinpimarn/ku-polls/actions/workflows/django.yml)
+[![Unittest](https://github.com/pinpimarn/ku-polls/actions/workflows/django.yml/badge.svg)](https://github.com/pinpimarn/ku-polls/actions/workflows/django.yml)
 [![codecov](https://codecov.io/gh/pinpimarn/ku-polls/branch/main/graph/badge.svg?token=M4T43MDT9P)](https://codecov.io/gh/pinpimarn/ku-polls)
 This application is mainly used for online polls and surveys and using Django framework where you can see the tutorial on [Django Tutorial project](https://docs.djangoproject.com/en/4.1/intro/tutorial01/). It also having other features as well.
 
