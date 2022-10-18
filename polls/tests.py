@@ -206,55 +206,53 @@ class QuestionDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
 
+    class VoteTest(TestCase):
+        def setUp(self) -> None:
+            """Initialize attribute before test"""
+            self.user = User.objects.create_user(username="mymelody")
+            self.user.set_password("hackme22")
+            self.user.save()
+            self.client.login(username="mymelody", password="hackme22")
 
-# class VoteTest(TestCase):
-#
-#     def setUp(self) -> None:
-#         """Initialize attribute before test"""
-#         self.user = User.objects.create_user(username="mymelody")
-#         self.user.set_password("hackme22")
-#         self.user.save()
-#         self.client.login(username="mymelody", password="hackme22")
-#
-#     def test_vote_count(self):
-#         """
-#         Test that the number of votes are counted correctly.
-#         """
-#         question1 = create_question(question_text='Past Question.',
-#                                     days=-5)
-#         choice1 = question1.choice_set.create(choice_text='Correct')
-#         # self.user = User.objects.create_user(username='mymelody')
-#         Vote.objects.create(question=question1,
-#                             choice=choice1,
-#                             user=self.user)
-#         self.assertEqual(1, choice1.votes)
-#
-#     def test_user_can_vote_one_choice_each_question(self):
-#         """Test for one user one vote."""
-#         question1 = create_question(question_text='Past Question.',
-#                                     days=-5)
-#         choice1 = question1.choice_set.create(choice_text="A lot")
-#         choice2 = question1.choice_set.create(choice_text="Not at all")
-#         self.user = User.objects.create_user(username='mymelody')
-#         self.client.post(reverse('polls:vote', args=(question1.id,)),
-#                             {'choice': choice1.id})
-#         self.assertEqual(question1.vote_set.get(user=self.user).choice,
-#                             choice1)
-#         self.assertEqual(Vote.objects.all().count(), 1)
-#         self.client.post(reverse('polls:vote', args=(question1.id,)),
-#                             {'choice': choice2.id})
-#         self.assertEqual(question1.vote_set.get(user=self.user).choice,
-#                             choice2)
-#         self.assertEqual(Vote.objects.all().count(), 1)
-#
-#     def test_voter_is_authenticated(self):
-#         """Test that only authenticated user can vote."""
-#         question1 = create_question(question_text='Past Question.',
-#                                     days=-5)
-#         ans_a = self.client.post(reverse('polls:vote',
-#                                             args=(question1.id,)))
-#         self.assertEqual(ans_a.status_code, 200)
-#         self.client.logout()
-#         ans_b = self.client.post(reverse('polls:vote',
-#                                             args=(question1.id,)))
-#         self.assertEqual(ans_b.status_code, 302)
+        def test_vote_count(self):
+            """
+            Test that the number of votes are counted correctly.
+            """
+            question1 = create_question(question_text='Past Question.',
+                                        days=-5)
+            choice1 = question1.choice_set.create(choice_text='Correct')
+            # self.user = User.objects.create_user(username='mymelody')
+            Vote.objects.create(question=question1,
+                                choice=choice1,
+                                user=self.user)
+            self.assertEqual(1, choice1.votes)
+
+        def test_user_can_vote_one_choice_each_question(self):
+            """Test for one user one vote."""
+            question1 = create_question(question_text='Past Question.',
+                                        days=-5)
+            choice1 = question1.choice_set.create(choice_text="A lot")
+            choice2 = question1.choice_set.create(choice_text="Not at all")
+            self.user = User.objects.create_user(username='mymelody')
+            self.client.post(reverse('polls:vote', args=(question1.id,)),
+                                {'choice': choice1.id})
+            self.assertEqual(question1.vote_set.get(user=self.user).choice,
+                                choice1)
+            self.assertEqual(Vote.objects.all().count(), 1)
+            self.client.post(reverse('polls:vote', args=(question1.id,)),
+                                {'choice': choice2.id})
+            self.assertEqual(question1.vote_set.get(user=self.user).choice,
+                                choice2)
+            self.assertEqual(Vote.objects.all().count(), 1)
+
+        def test_voter_is_authenticated(self):
+            """Test that only authenticated user can vote."""
+            question1 = create_question(question_text='Past Question.',
+                                        days=-5)
+            ans_a = self.client.post(reverse('polls:vote',
+                                                args=(question1.id,)))
+            self.assertEqual(ans_a.status_code, 200)
+            self.client.logout()
+            ans_b = self.client.post(reverse('polls:vote',
+                                                args=(question1.id,)))
+            self.assertEqual(ans_b.status_code, 302)
