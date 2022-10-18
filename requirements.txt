@@ -1,5 +1,3 @@
-asgiref==3.5.2
-config==0.5.1
-sqlparse==0.4.2
-Django==4.1.1
-python-decouple==3.6
+Django
+python-decouple
+flake8
